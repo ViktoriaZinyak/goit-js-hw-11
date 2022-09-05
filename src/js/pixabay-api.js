@@ -14,7 +14,7 @@ export default class PixabayApi {
     });
     return api
       .get(
-        `?key=${KEY}&q=${this.searchQuery}&image_type=photo&orientation=horizontal&safesearch=true&page=${this.page}`
+        `?key=${KEY}&q=${this.searchQuery}&image_type=photo&orientation=horizontal&safesearch=true&page=${this.page}&per_page=40`
       )
       .then(data => {
         this.page += 1;
@@ -35,8 +35,13 @@ export default class PixabayApi {
   }
 
   notification() {
-    this.fetchPhotos().then(data =>
-      Notiflix.Notify.success(`Hooray! We found ${data.totalHits} images.`)
-    );
+    return this.fetchPhotos().then(data => {
+      if (data.totalHits > 0) {
+        Notiflix.Notify.success(`Hooray! We found ${data.totalHits} images.`);
+      } else {
+        Notiflix.Notify.failure('Oops, there is no photo with that name');
+      }
+      return data.totalHits;
+    });
   }
 }

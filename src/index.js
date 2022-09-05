@@ -18,10 +18,14 @@ function onSearch(e) {
     .then(data => data.hits)
     .then(photos => {
       clearPhotosWrap();
-      pixabayApi.notification();
+      pixabayApi.notification().then(data => {
+        if (data > 0) {
+          buttonLoadMore.classList.remove('is-hidden');
+        }
+      });
       photosWrap.insertAdjacentHTML('beforeend', photoTemplate(photos));
-      buttonLoadMore.classList.remove('is-hidden');
     });
+  buttonLoadMore.classList.add('is-hidden');
 }
 
 function onLoadMore() {
@@ -55,7 +59,7 @@ function photoTemplate(photos) {
     .join('');
 }
 
-function appendPhotosMarkup() {
+function appendPhotosMarkup(photos) {
   photosWrap.insertAdjacentHTML('beforeend', photoTemplate(photos));
 }
 
