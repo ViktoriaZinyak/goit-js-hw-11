@@ -102,19 +102,29 @@ export default class PixabayApi {
     this.page = 1;
   }
 
-  fetchPhotos() {
+  async fetchPhotos() {
     const api = axios.create({
       baseURL: 'https://pixabay.com/api/',
     });
-    return api
-      .get(
+    try {
+      const resposne = await api.get(
         `?key=${KEY}&q=${this.searchQuery}&image_type=photo&orientation=horizontal&safesearch=true&per_page=40&page=${this.page}`
-      )
-      .then(res => {
-        this.page += 1;
-        return res.data;
-      })
-      .catch(console.log('hjk'));
+      );
+      const newObj = await resposne.data;
+      this.page += 1;
+      return newObj;
+    } catch (error) {
+      console.log('hjk');
+    }
+    // return api
+    //   .get(
+    //     `?key=${KEY}&q=${this.searchQuery}&image_type=photo&orientation=horizontal&safesearch=true&per_page=40&page=${this.page}`
+    //   )
+    //   .then(res => {
+    //     this.page += 1;
+    //     return res.data;
+    //   })
+    //   .catch(console.log('hjk'));
   }
 
   resetPage() {

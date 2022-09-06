@@ -138,47 +138,31 @@ buttonLoadMore.classList.add('is-hidden');
 form.addEventListener('submit', onSearch);
 buttonLoadMore.addEventListener('click', onLoadMore);
 
-function onSearch(e) {
+async function onSearch(e) {
   e.preventDefault();
   clearPhotosWrap();
   pixabayApi.query = e.currentTarget.elements.searchQuery.value.trim();
   pixabayApi.resetPage();
-  pixabayApi
-    .fetchPhotos()
-    .then(data => {
-      buttonLoadMore.classList.add('is-hidden');
-      if (data.totalHits > 0) {
-        Notiflix.Notify.warning(`Hooray! We found ${data.totalHits} images.`);
-        buttonLoadMore.classList.remove('is-hidden');
-      }
-      return data.hits;
-    })
-    .then(appendPhotosMarkup);
-  //  ;
-  //   pixabayApi.fetchPhotos().then(photos => {
-  //     clearPhotosWrap();
-  //     pixabayApi.notification();
-  //     photosWrap.insertAdjacentHTML('beforeend', photoTemplate(photos));
-  //     buttonLoadMore.classList.remove('is-hidden');
-  //   });
+  const data = await pixabayApi.fetchPhotos();
+  buttonLoadMore.classList.add('is-hidden');
+  if (data.totalHits > 0) {
+    Notiflix.Notify.warning(`Hooray! We found ${data.totalHits} images.`);
+    buttonLoadMore.classList.remove('is-hidden');
+  }
+  appendPhotosMarkup(data.hits);
 }
 
-function onLoadMore() {
-  pixabayApi
-    .fetchPhotos()
-    .then(data => {
-      if (data.totalHits === 0) {
-        buttonLoadMore.classList.add('is-hidden');
-      }
-      return data.hits;
-    })
-    .then(appendPhotosMarkup);
-  // .then(appendPhotosMarkup);
-  //   pixabayApi.fetchPhotos().then(appendPhotosMarkup);
+async function onLoadMore() {
+  const data = await pixabayApi.fetchPhotos();
+  if (data.totalHits === 0) {
+    buttonLoadMore.classList.add('is-hidden');
+  }
+  appendPhotosMarkup(data.hits);
 }
+// .then(appendPhotosMarkup);
+//   pixabayApi.fetchPhotos().then(appendPhotosMarkup);
 
 function photoTemplate(photos) {
-  console.log(photos);
   if (photos.length < 40 && photos.length != 0) {
     buttonLoadMore.classList.add('is-hidden');
     Notiflix.Notify.warning(
