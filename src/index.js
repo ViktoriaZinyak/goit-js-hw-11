@@ -139,6 +139,7 @@ buttonLoadMore.addEventListener('click', onLoadMore);
 
 function onSearch(e) {
   e.preventDefault();
+  clearPhotosWrap();
   pixabayApi.query = e.currentTarget.elements.searchQuery.value.trim();
   pixabayApi.resetPage();
   pixabayApi
