@@ -146,7 +146,11 @@ function onSearch(e) {
   pixabayApi
     .fetchPhotos()
     .then(data => {
-      buttonLoadMore.classList.remove('is-hidden');
+      buttonLoadMore.classList.add('is-hidden');
+      if (data.totalHits > 0) {
+        Notiflix.Notify.warning(`Hooray! We found ${data.totalHits} images.`);
+        buttonLoadMore.classList.remove('is-hidden');
+      }
       return data.hits;
     })
     .then(appendPhotosMarkup);
@@ -162,7 +166,12 @@ function onSearch(e) {
 function onLoadMore() {
   pixabayApi
     .fetchPhotos()
-    .then(data => data.hits)
+    .then(data => {
+      if (data.totalHits === 0) {
+        buttonLoadMore.classList.add('is-hidden');
+      }
+      return data.hits;
+    })
     .then(appendPhotosMarkup);
   // .then(appendPhotosMarkup);
   //   pixabayApi.fetchPhotos().then(appendPhotosMarkup);
@@ -170,7 +179,7 @@ function onLoadMore() {
 
 function photoTemplate(photos) {
   console.log(photos);
-  if (photos.length < 40) {
+  if (photos.length < 40 && photos.length != 0) {
     buttonLoadMore.classList.add('is-hidden');
     Notiflix.Notify.warning(
       "We're sorry, but you've reached the end of search results."
