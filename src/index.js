@@ -127,13 +127,14 @@
 // }
 
 import PixabayApi from './js/pixabay-api';
+import Notiflix from 'notiflix';
 
 const form = document.querySelector('.search-form');
 const buttonLoadMore = document.querySelector('.load-more');
 const photosWrap = document.querySelector('.gallery');
 
 const pixabayApi = new PixabayApi();
-// buttonLoadMore.classList.add('is-hidden');
+buttonLoadMore.classList.add('is-hidden');
 form.addEventListener('submit', onSearch);
 buttonLoadMore.addEventListener('click', onLoadMore);
 
@@ -144,7 +145,10 @@ function onSearch(e) {
   pixabayApi.resetPage();
   pixabayApi
     .fetchPhotos()
-    .then(data => data.hits)
+    .then(data => {
+      buttonLoadMore.classList.remove('is-hidden');
+      return data.hits;
+    })
     .then(appendPhotosMarkup);
   //  ;
   //   pixabayApi.fetchPhotos().then(photos => {
@@ -166,6 +170,12 @@ function onLoadMore() {
 
 function photoTemplate(photos) {
   console.log(photos);
+  if (photos.length < 40) {
+    buttonLoadMore.classList.add('is-hidden');
+    Notiflix.Notify.warning(
+      "We're sorry, but you've reached the end of search results."
+    );
+  }
   return photos
     .map(
       el => `<div class="photo-card">

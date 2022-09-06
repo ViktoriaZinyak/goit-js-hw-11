@@ -113,7 +113,8 @@ export default class PixabayApi {
       .then(res => {
         this.page += 1;
         return res.data;
-      });
+      })
+      .catch(console.log('hjk'));
   }
 
   resetPage() {
