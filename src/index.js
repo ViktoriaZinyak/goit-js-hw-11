@@ -1,5 +1,7 @@
 import PixabayApi from './js/pixabay-api';
 import Notiflix from 'notiflix';
+import SimpleLightbox from 'simplelightbox';
+import 'simplelightbox/dist/simple-lightbox.min.css';
 
 const form = document.querySelector('.search-form');
 const buttonLoadMore = document.querySelector('.load-more');
@@ -13,10 +15,10 @@ buttonLoadMore.addEventListener('click', onLoadMore);
 async function onSearch(e) {
   e.preventDefault();
   clearPhotosWrap();
+  buttonLoadMore.classList.add('is-hidden');
   pixabayApi.query = e.currentTarget.elements.searchQuery.value.trim();
   pixabayApi.resetPage();
   const data = await pixabayApi.fetchPhotos();
-  buttonLoadMore.classList.add('is-hidden');
   if (data.totalHits > 0) {
     Notiflix.Notify.success(`Hooray! We found ${data.totalHits} images.`);
     buttonLoadMore.classList.remove('is-hidden');
@@ -25,6 +27,13 @@ async function onSearch(e) {
     `Sorry, there are no images matching your search query. Please try again.`;
   }
   appendPhotosMarkup(data.hits);
+  const lightbox = new SimpleLightbox('.photo-card a');
+  console.log(lightbox);
+
+  lightbox.on(
+    'show.simplelightbox',
+    () => (lightbox.defaultOptions.overlayOpacity = 0.8)
+  );
 }
 
 async function onLoadMore() {
@@ -45,7 +54,8 @@ function photoTemplate(photos) {
   return photos
     .map(
       el => `<div class="photo-card">
-  <img src="${el.webformatURL}" alt="${el.tags}" loading="lazy" />
+      <a href=${el.largeImageURL}'>
+  <img src="${el.webformatURL}" alt="${el.tags}" loading="lazy" /></a>
   <div class="info">
     <p class="info-item">
       <b>Likes ${el.likes}</b>
