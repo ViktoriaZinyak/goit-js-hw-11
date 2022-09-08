@@ -1,13 +1,11 @@
 import PixabayApi from './js/pixabay-api';
 import Notiflix from 'notiflix';
-import SimpleLightbox from 'simplelightbox';
-import 'simplelightbox/dist/simple-lightbox.min.css';
 
 const form = document.querySelector('.search-form');
 const buttonLoadMore = document.querySelector('.load-more');
 const photosWrap = document.querySelector('.gallery');
-
 const pixabayApi = new PixabayApi();
+
 buttonLoadMore.classList.add('is-hidden');
 form.addEventListener('submit', onSearch);
 buttonLoadMore.addEventListener('click', onLoadMore);
@@ -23,17 +21,11 @@ async function onSearch(e) {
     Notiflix.Notify.success(`Hooray! We found ${data.totalHits} images.`);
     buttonLoadMore.classList.remove('is-hidden');
   } else {
-    Notiflix.Notify.failure();
-    `Sorry, there are no images matching your search query. Please try again.`;
+    Notiflix.Notify.failure(
+      'Sorry, there are no images matching your search query. Please try again.'
+    );
   }
   appendPhotosMarkup(data.hits);
-  const lightbox = new SimpleLightbox('.photo-card a');
-  console.log(lightbox);
-
-  lightbox.on(
-    'show.simplelightbox',
-    () => (lightbox.defaultOptions.overlayOpacity = 0.8)
-  );
 }
 
 async function onLoadMore() {
