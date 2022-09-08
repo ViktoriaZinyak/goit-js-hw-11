@@ -11,7 +11,7 @@ export default class PixabayApi {
   async fetchPhotos() {
     try {
       const api = axios.create({
-        baseURL: 'https://pixabay.com/apiч/',
+        baseURL: 'https://pixabay.com/api/',
       });
       const resposne = await api.get(
         `?key=${KEY}&q=${this.searchQuery}&image_type=photo&orientation=horizontal&safesearch=true&per_page=40&page=${this.page}`
