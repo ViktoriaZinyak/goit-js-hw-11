@@ -16,16 +16,20 @@ async function onSearch(e) {
   buttonLoadMore.classList.add('is-hidden');
   pixabayApi.query = e.currentTarget.elements.searchQuery.value.trim();
   pixabayApi.resetPage();
-  const data = await pixabayApi.fetchPhotos();
-  if (data.totalHits > 0) {
-    Notiflix.Notify.success(`Hooray! We found ${data.totalHits} images.`);
-    buttonLoadMore.classList.remove('is-hidden');
-  } else {
-    Notiflix.Notify.failure(
-      'Sorry, there are no images matching your search query. Please try again.'
-    );
+  try {
+    const data = await pixabayApi.fetchPhotos();
+    if (data.totalHits > 0) {
+      Notiflix.Notify.success(`Hooray! We found ${data.totalHits} images.`);
+      buttonLoadMore.classList.remove('is-hidden');
+    } else {
+      Notiflix.Notify.failure(
+        'Sorry, there are no images matching your search query. Please try again.'
+      );
+    }
+    appendPhotosMarkup(data.hits);
+  } catch (error) {
+    console.error(error);
   }
-  appendPhotosMarkup(data.hits);
 }
 
 async function onLoadMore() {

@@ -11,7 +11,7 @@ export default class PixabayApi {
   async fetchPhotos() {
     try {
       const api = axios.create({
-        baseURL: 'https://pixabay.com/api/',
+        baseURL: 'https://pixabay.com/apiч/',
       });
       const resposne = await api.get(
         `?key=${KEY}&q=${this.searchQuery}&image_type=photo&orientation=horizontal&safesearch=true&per_page=40&page=${this.page}`
@@ -20,9 +20,7 @@ export default class PixabayApi {
       this.page += 1;
       return newObj;
     } catch (error) {
-      Notiflix.Notify.failure(
-        'Sorry, there are no images matching your search query. Please try again.'
-      );
+      console.error(error);
       throw error;
     }
   }
