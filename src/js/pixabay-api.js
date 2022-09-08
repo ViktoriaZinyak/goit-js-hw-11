@@ -19,10 +19,11 @@ export default class PixabayApi {
       const newObj = await resposne.data;
       this.page += 1;
       return newObj;
-    } catch {
+    } catch (error) {
       Notiflix.Notify.failure(
         'Sorry, there are no images matching your search query. Please try again.'
       );
+      throw error;
     }
   }
 
